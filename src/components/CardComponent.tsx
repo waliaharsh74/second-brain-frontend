@@ -16,7 +16,22 @@ import { CardProps } from '../types/types'
 import { Button } from './ui/button'
 import { Share2, Trash2 } from 'lucide-react'
 import { getIcon } from '@/utils/getIcon'
+import { Tweet } from 'react-tweet'
+import '../globals.css'
 
+
+
+const extractYouTubeId = (url: string) => {
+    const regex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|\S+\/|\S*?[?&]v=)|youtu\.be\/)([\w-]{11})/;
+    const match = url.match(regex);
+    return match ? match[1] : null;
+}
+
+const extractTweetId = (url: string): string | null => {
+    const regex = /(?:https?:\/\/)?(?:www\.)?x\.com\/(?:[^\/]+\/)?status(?:es)?\/(\d+)/;
+    const match = url.match(regex);
+    return match ? match[1] : null;
+};
 const CardComponent: React.FC<CardProps> = ({ note }) => {
     return (
         <Card key={note.id}>
@@ -29,6 +44,22 @@ const CardComponent: React.FC<CardProps> = ({ note }) => {
                     <p className="whitespace-pre-wrap text-sm text-muted-foreground">
                         {note.content}
                     </p>
+                </CardContent>
+            )}
+            {note.type === 'video' && (
+                <CardContent>
+                    <iframe
+
+                        src={`https://www.youtube.com/embed/${extractYouTubeId(note.link || "")}`}
+                        frameBorder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                    ></iframe>
+                </CardContent>
+            )}
+            {note.type === 'tweet' && (
+                <CardContent className=''>
+                    <a href={note.link} className='block w-full break-words'>{note.link}</a>
                 </CardContent>
             )}
             <CardFooter className="flex flex-col items-stretch gap-2">

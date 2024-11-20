@@ -2,3 +2,28 @@
 @tailwind components;
 @tailwind utilities;
 
+:global(.react-tweet-theme) {
+ 
+  --tweet-height: 60px;  
+}
+:global(.react-tweet-theme .tweet-profile-image) {
+  display: none; 
+}
+
+:global(.react-tweet-theme .tweet-footer) {
+  display: none;  /* Hide the footer with the timestamp */
+}
+
+:global(.react-tweet-theme .tweet-media) {
+  display: none;  /* Hide media (like images or videos) */
+}
+
+/* Make sure the username and tweet text are visible */
+:global(.react-tweet-theme .tweet-text) {
+  font-size: 1.2rem;
+  line-height: 1.5;
+}
+
+:global(.react-tweet-theme .tweet-username) {
+  font-weight: bold;
+}
