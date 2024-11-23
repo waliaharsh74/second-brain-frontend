@@ -13,6 +13,10 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog"
 import CardComponent from "./CardComponent"
+import { Label } from "./ui/label"
+import { Input } from "./ui/input"
+import { Textarea } from "./ui/textarea"
+import { DropDown } from "./DropDown"
 
 
 export default function Component() {
@@ -129,10 +133,70 @@ export default function Component() {
                             </div>
                         </DialogContent>
                     </Dialog>
-                    <Button className="gap-2 ">
-                        <FileText className="h-5 w-5" />
-                        Add Content
-                    </Button>
+                    <Dialog>
+                        <DialogTrigger asChild>
+                            <Button className="gap-2">
+                                <FileText className="h-5 w-5" />
+                                Add Content
+                            </Button>
+                        </DialogTrigger>
+                        <DialogContent className="bg-white max-w-lg mx-auto p-6 rounded-lg shadow-xl">
+                            <DialogHeader>
+                                <DialogTitle>Add Content</DialogTitle>
+                                <DialogDescription>
+                                    Share your entire collection of notes, documents, tweets, and videos with others. They&apos;ll be able to import your content into their own Second Brain.
+                                </DialogDescription>
+                            </DialogHeader>
+                            <div className="space-y-4 pt-4">
+
+                                <div className="grid gap-4">
+                                    <div className="grid gap-2">
+                                        <Label htmlFor="title">Title</Label>
+                                        <Input
+                                            id="title"
+                                            type="title"
+                                            placeholder="Productivity Tip 💡"
+                                            required
+                                        />
+                                    </div>
+                                    <DropDown />
+                                    <div className="grid gap-2">
+                                        <Label htmlFor="link">Link</Label>
+                                        <Input
+                                            id="link"
+                                            type="link"
+                                            placeholder="youtube.com/123"
+                                            required
+                                        />
+                                    </div>
+                                    <div className="grid gap-2">
+                                        <div className="flex items-center">
+                                            <Label htmlFor="content">Content</Label>
+
+                                        </div>
+
+                                        <Textarea />
+                                    </div>
+
+
+                                    <Button type="submit" className="w-full">
+                                        Login
+                                    </Button>
+                                    <Button variant="outline" className="w-full">
+                                        Login with Google
+                                    </Button>
+                                </div>
+                                <div className="mt-4 text-center text-sm">
+                                    Don&apos;t have an account?{" "}
+                                    <a href="#" className="underline">
+                                        Sign up
+                                    </a>
+                                </div>
+
+                            </div>
+                        </DialogContent>
+                    </Dialog>
+
                 </header>
 
                 <main className="grid gap-4 p-4 md:grid-cols-2 lg:grid-cols-3">
