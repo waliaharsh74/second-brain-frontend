@@ -1,3 +1,5 @@
+import { ReactElement } from "react"
+
 export type Note = {
     id: string
     title: string
@@ -14,4 +16,9 @@ export type NavbarProps = {
 export type CardProps = {
     // toggleSidebar: () => void;
     note: Note;
+};
+export type FrameworkProps = {
+    value: string,
+    label: string,
+    icon: React.ComponentType<{ className?: string }>
 };

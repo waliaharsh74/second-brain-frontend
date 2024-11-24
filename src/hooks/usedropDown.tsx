@@ -2,7 +2,6 @@ import * as React from "react"
 import { Check, ChevronsUpDown } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
-import { useQuery, useQueryClient } from '@tanstack/react-query'
 import {
     Command,
     CommandEmpty,
@@ -33,17 +32,18 @@ export function useDropDown(frameworks: FrameworkProps[]) {
                 >
                     {value
                         ? frameworks.find((framework) => framework.value === value)?.label
-                        : "Select Type..."}
+                        : "Select Option..."}
                     <ChevronsUpDown className="opacity-50" />
                 </Button>
             </PopoverTrigger>
             <PopoverContent className="w-[200px] p-0 bg-white">
                 <Command>
-                    <CommandInput placeholder="Search framework..." className="h-9" />
+                    <CommandInput placeholder="Search Type..." className="h-9" />
                     <CommandList>
-                        <CommandEmpty>No Type found.</CommandEmpty>
+                        <CommandEmpty>No Option found.</CommandEmpty>
                         <CommandGroup>
                             {frameworks.map((framework) => (
+
                                 <CommandItem
                                     key={framework.value}
                                     value={framework.value}
@@ -52,7 +52,9 @@ export function useDropDown(frameworks: FrameworkProps[]) {
                                         setOpen(false)
                                     }}
                                 >
+                                    <framework.icon />
                                     {framework.label}
+
                                     <Check
                                         className={cn(
                                             "ml-auto",

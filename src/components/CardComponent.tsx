@@ -39,7 +39,7 @@ const CardComponent: React.FC<CardProps> = ({ note }) => {
                 {getIcon(note.type)}
                 <CardTitle className="text-base">{note.title}</CardTitle>
             </CardHeader>
-            {note.content && (
+            {note.content && note.type != 'video' && (
                 <CardContent>
                     <p className="whitespace-pre-wrap text-sm text-muted-foreground">
                         {note.content}

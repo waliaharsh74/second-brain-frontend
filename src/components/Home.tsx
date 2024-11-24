@@ -1,7 +1,7 @@
 import * as React from "react"
 import { Copy, FileText, Hash, Link2, Share2, Twitter, Youtube } from 'lucide-react'
 import { cn } from "@/lib/utils"
-
+import axios from "axios"
 import { Button } from "@/components/ui/button"
 import { Note } from '../types/types'
 import {
@@ -13,13 +13,16 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog"
 import CardComponent from "./CardComponent"
+import { MultiSelect } from "./MultiSelect"
 import { Label } from "./ui/label"
 import { Input } from "./ui/input"
 import { Textarea } from "./ui/textarea"
-import { DropDown } from "./DropDown"
+import { TypeFramework, TagsFramework } from '../utils/frameworks'
+import { useDropDown } from "../hooks/usedropDown"
+import { useToast } from "@/hooks/use-toast"
 
 
-export default function Component() {
+export default function Home() {
     const [isSidebarOpen, setSidebarOpen] = React.useState(true)
     const [notes, setNotes] = React.useState<Note[]>([
         {
@@ -50,8 +53,53 @@ export default function Component() {
             link: "https://x.com/kirat_tw/status/1851276597812162645"
         }
     ])
-
+    const [selectedFrameworks, setSelectedFrameworks] = React.useState<string[]>(["Productivity", "Ideas"]);
+    const [title, setTitle] = React.useState("");
+    const [link, setLink] = React.useState("");
+    const { value: typeValue, Component: TypeComponent } = useDropDown(TypeFramework)
     const toggleSidebar = () => setSidebarOpen(!isSidebarOpen)
+    const { toast } = useToast()
+
+
+    const handleSubmit = async () => {
+        console.log(selectedFrameworks, title, typeValue);
+        if (!selectedFrameworks || !title || !typeValue) {
+
+            toast({
+                title: "Uh oh! Something went wrong.",
+                description: "Please Select all required feilds",
+            })
+        }
+        try {
+            const response = await axios.post('http://localhost:3000/api/v1/content', { link: link, type: typeValue, title, tags: selectedFrameworks })
+            console.log(response);
+        } catch (error) {
+            toast({
+                title: "Uh oh! Something went wrong.",
+                description: "check console for error",
+            })
+            console.log(error);
+        }
+    }
+    React.useEffect(() => {
+        const FetchData = async () => {
+            try {
+                const { data } = await axios.get('http://localhost:3000/api/v1/content')
+                setNotes(data?.content);
+                console.log("notes", data);
+            } catch (error) {
+                toast({
+                    title: "Uh oh! Something went wrong.",
+                    description: "check console for error",
+                })
+                console.log(error);
+            }
+
+        }
+        FetchData()
+
+    }, [])
+
 
 
 
@@ -154,18 +202,41 @@ export default function Component() {
                                         <Label htmlFor="title">Title</Label>
                                         <Input
                                             id="title"
+                                            onChange={(e) => setTitle(e.target.value)}
+                                            value={title}
                                             type="title"
                                             placeholder="Productivity Tip 💡"
                                             required
                                         />
                                     </div>
-                                    <DropDown />
+
+
+                                    <div className="grid gap-2">
+                                        <Label htmlFor="type">Type</Label>
+
+                                        {TypeComponent}
+                                    </div>
+                                    <div className="grid gap-2">
+                                        <Label htmlFor="tag">Tag</Label>
+                                        <MultiSelect
+                                            options={TagsFramework}
+                                            onValueChange={setSelectedFrameworks}
+                                            defaultValue={selectedFrameworks}
+                                            placeholder="Select frameworks"
+                                            variant="inverted"
+                                            animation={2}
+                                            maxCount={3}
+                                        />
+                                    </div>
+
                                     <div className="grid gap-2">
                                         <Label htmlFor="link">Link</Label>
                                         <Input
                                             id="link"
+                                            value={link}
+                                            onChange={(e) => setLink(e.target.value)}
                                             type="link"
-                                            placeholder="youtube.com/123"
+                                            placeholder="www.youtube.com/123"
                                             required
                                         />
                                     </div>
@@ -179,18 +250,10 @@ export default function Component() {
                                     </div>
 
 
-                                    <Button type="submit" className="w-full">
-                                        Login
+                                    <Button type="submit" onClick={handleSubmit} className="w-full">
+                                        Add content
                                     </Button>
-                                    <Button variant="outline" className="w-full">
-                                        Login with Google
-                                    </Button>
-                                </div>
-                                <div className="mt-4 text-center text-sm">
-                                    Don&apos;t have an account?{" "}
-                                    <a href="#" className="underline">
-                                        Sign up
-                                    </a>
+
                                 </div>
 
                             </div>
