@@ -2,6 +2,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Home from './components/Home'
 import LoginForm from './components/Login'
 import AddContent from './components/AddContent'
+import SignUpForm from './components/Signup'
 // import { QueryClientProvider, QueryClient } from '@tanstack/react-query'
 // const queryClient = new QueryClient()
 
@@ -14,6 +15,7 @@ function App() {
 
         <Route path='/home' element={<Home />} />
         <Route path='/login' element={<LoginForm />} />
+        <Route path='/signup' element={<SignUpForm />} />
         <Route path='/add-content' element={<AddContent />} />
 
       </Routes>

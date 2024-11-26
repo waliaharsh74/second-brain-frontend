@@ -22,9 +22,10 @@ export const iframeHeight = "600px"
 export const containerClassName =
     "w-full h-screen flex items-center justify-center px-4"
 
-export default function LoginForm() {
+export default function SignUpForm() {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+
     const handleSubmit = async () => {
 
 
@@ -37,20 +38,19 @@ export default function LoginForm() {
                 })
                 return
             }
-            // if (password.length <= 5) {
+            if (password.length <= 5) {
 
-            //     toast({
-            //         title: "Oops Error!",
-            //         description: "password should have more than 5 characters",
-            //     })
-            //     return
-            // }
+                toast({
+                    title: "Oops Error!",
+                    description: "password should have more than 5 characters",
+                })
+                return
+            }
 
-            const { data } = await axios.post('http://localhost:3000/api/v1/signin', { email, password })
-            localStorage.setItem("acessToken", data?.token)
+            const response = await axios.post('http://localhost:3000/api/v1/signup', { email, password })
             toast({
-                title: "login Success!",
-                description: "you can now use this app"
+                title: "Signup Success!",
+                description: "you can now login to use app"
             })
         } catch (error) {
             toast({
@@ -63,9 +63,9 @@ export default function LoginForm() {
     return (
         <Card className="mx-auto md:mt-[100px] max-w-sm">
             <CardHeader>
-                <CardTitle className="text-2xl mx-auto">Login</CardTitle>
+                <CardTitle className="text-2xl mx-auto">Sign Up</CardTitle>
                 <CardDescription>
-                    Enter your email below to login to your account
+                    Enter your email below to create  your account
                 </CardDescription>
             </CardHeader>
             <CardContent>
@@ -92,13 +92,13 @@ export default function LoginForm() {
                             onChange={(e) => setPassword(e.target.value)} type="password" required />
                     </div>
                     <Button type="submit" onClick={handleSubmit} className="w-full">
-                        Login
+                        Sign up
                     </Button>
 
                 </div>
                 <div className="mt-4 text-center text-sm">
-                    Don&apos;t have an account?{" "}
-                    <Link to="/signup " className="underline">Sign up</Link>
+                    Already have an account?{" "}
+                    <Link to="/login " className="underline">Login</Link>
 
                 </div>
             </CardContent>
