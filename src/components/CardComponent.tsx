@@ -75,9 +75,7 @@ const CardComponent: React.FC<CardProps> = ({ note }) => {
                     ))}
                 </div>
                 <div className="flex items-center justify-between">
-                    <span className="text-sm text-muted-foreground">
-                        Added on {note.date}
-                    </span>
+
                     <div className="flex gap-0.5">
                         <TooltipProvider>
                             <Tooltip>

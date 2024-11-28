@@ -12,7 +12,7 @@ import { Label } from "@/components/ui/label"
 import { toast } from "@/hooks/use-toast"
 import axios from "axios"
 import { useState } from "react"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 
 export const description =
     "A login form with email and password. There's an option to login with Google and a link to sign up if you don't have an account."
@@ -23,6 +23,7 @@ export const containerClassName =
     "w-full h-screen flex items-center justify-center px-4"
 
 export default function LoginForm() {
+    const navigate = useNavigate()
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const handleSubmit = async () => {
@@ -47,11 +48,12 @@ export default function LoginForm() {
             // }
 
             const { data } = await axios.post('http://localhost:3000/api/v1/signin', { email, password })
-            localStorage.setItem("acessToken", data?.token)
+            localStorage.setItem("secondBrainToken", data?.token)
             toast({
                 title: "login Success!",
                 description: "you can now use this app"
             })
+            navigate('/')
         } catch (error) {
             toast({
                 title: "Uh oh! Something went wrong.",
