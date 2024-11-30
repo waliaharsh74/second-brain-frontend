@@ -2,11 +2,11 @@ import { Cat, Dog, Fish, Rabbit, Turtle } from "lucide-react";
 import { FileText, Hash, Link2, Twitter, Youtube } from 'lucide-react'
 
 export const TypeFramework = [
-    { icon: Twitter, label: "Tweet", value: "Tweet" },
-    { icon: Youtube, label: "Video", value: "Video" },
-    { icon: FileText, label: "Document", value: "Document" },
-    { icon: Link2, label: "Link", value: "Link" },
-    { icon: Hash, label: "Tag", value: "Tag" },
+    { icon: Twitter, label: "Tweet", value: "tweet" },
+    { icon: Youtube, label: "Video", value: "video" },
+    { icon: FileText, label: "Document", value: "document" },
+    { icon: Link2, label: "Link", value: "link" },
+    { icon: Hash, label: "Tag", value: "tag" },
 ]
 
 

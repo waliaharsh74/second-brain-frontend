@@ -26,15 +26,15 @@ export default function Home() {
     const [isSidebarOpen, setSidebarOpen] = React.useState(true)
     const [notes, setNotes] = React.useState<Note[]>([
         {
-            id: "1",
+            _id: "1",
             title: "Project Ideas",
-            content: "Future Projects\n• Build a personal knowledge base\n• Create a habit tracker\n• Design a minimalist todo app",
+            content: "Future Projects\n• Build a personal knowledge base\n• Create a habit tracker\n• Design a minimalist todo app Future Projects\n• Build a personal knowledge base\n• Create a habit tracker\n• Design a minimalist todo app Future Projects\n• Build a personal knowledge base\n• Create a habit tracker\n• Design a minimalist todo app",
             type: "document",
             tags: ["productivity", "ideas"],
             date: "10/03/2024"
         },
         {
-            id: "2",
+            _id: "2",
             title: "How to Build a Second Brain",
             content: "",
             type: "video",
@@ -44,7 +44,7 @@ export default function Home() {
 
         },
         {
-            id: "3",
+            _id: "3",
             title: "Productivity Tip",
             content: "The best way to learn is to build in public. Share your progress, get feedback, and help others along the way.",
             type: "tweet",
@@ -71,7 +71,11 @@ export default function Home() {
             })
         }
         try {
-            const response = await axios.post('http://localhost:3000/api/v1/content', { link: link, type: typeValue, title, tags: selectedFrameworks })
+            const token = localStorage.getItem("secondBrainToken");
+            const headers = {
+                authorization: `Bearer ${token}`
+            }
+            const response = await axios.post('http://localhost:3000/api/v1/content', { link: link, type: typeValue, title, tags: selectedFrameworks }, { headers })
             console.log(response);
         } catch (error) {
             toast({
@@ -84,7 +88,11 @@ export default function Home() {
     React.useEffect(() => {
         const FetchData = async () => {
             try {
-                const { data } = await axios.get('http://localhost:3000/api/v1/content')
+                const token = localStorage.getItem("secondBrainToken");
+                const headers = {
+                    authorization: `Bearer ${token}`
+                }
+                const { data } = await axios.get('http://localhost:3000/api/v1/content', { headers })
                 setNotes(data?.content);
                 console.log("notes", data);
             } catch (error) {
@@ -264,7 +272,7 @@ export default function Home() {
 
                 <main className="grid gap-4 p-4 md:grid-cols-2 lg:grid-cols-3">
                     {notes.map((note) => (
-                        <CardComponent key={note.id} note={note} />
+                        <CardComponent key={note?._id} note={note} />
                     ))}
                 </main>
             </div>

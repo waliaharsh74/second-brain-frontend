@@ -6,6 +6,8 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 import {
     Tooltip,
     TooltipContent,
@@ -14,10 +16,15 @@ import {
 } from "@/components/ui/tooltip"
 import { CardProps } from '../types/types'
 import { Button } from './ui/button'
-import { Share2, Trash2 } from 'lucide-react'
+import { Copy, Share2, Trash2 } from 'lucide-react'
 import { getIcon } from '@/utils/getIcon'
 import { Tweet } from 'react-tweet'
 import '../globals.css'
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from "@/components/ui/popover"
 
 
 
@@ -32,11 +39,15 @@ const extractTweetId = (url: string): string | null => {
     const match = url.match(regex);
     return match ? match[1] : null;
 };
+
 const CardComponent: React.FC<CardProps> = ({ note }) => {
+    const handleDelete = (id: string) => {
+        console.log("id", id);
+    }
     return (
-        <Card key={note.id}>
+        <Card key={note._id}>
             <CardHeader className="flex flex-row items-center gap-2">
-                {getIcon(note.type)}
+                {getIcon(note?.type)}
                 <CardTitle className="text-base">{note.title}</CardTitle>
             </CardHeader>
             {note.content && note.type != 'video' && (
@@ -46,7 +57,7 @@ const CardComponent: React.FC<CardProps> = ({ note }) => {
                     </p>
                 </CardContent>
             )}
-            {note.type === 'video' && (
+            {note?.type?.toLowerCase() === 'video' && (
                 <CardContent>
                     <iframe
 
@@ -77,36 +88,24 @@ const CardComponent: React.FC<CardProps> = ({ note }) => {
                 <div className="flex items-center justify-between">
 
                     <div className="flex gap-0.5">
-                        <TooltipProvider>
-                            <Tooltip>
-                                <TooltipTrigger asChild>
-                                    <Button
-                                        variant="ghost"
-                                        size="icon"
-                                        className="h-8 w-8 text-muted-foreground"
-                                    >
-                                        <Share2 className="h-4 w-4" />
-                                        <span className="sr-only">Share</span>
-                                    </Button>
-                                </TooltipTrigger>
-                                <TooltipContent>Share</TooltipContent>
-                            </Tooltip>
-                        </TooltipProvider>
-                        <TooltipProvider>
-                            <Tooltip>
-                                <TooltipTrigger asChild>
-                                    <Button
-                                        variant="ghost"
-                                        size="icon"
-                                        className="h-8 w-8 text-muted-foreground"
-                                    >
-                                        <Trash2 className="h-4 w-4" />
-                                        <span className="sr-only">Delete</span>
-                                    </Button>
-                                </TooltipTrigger>
-                                <TooltipContent>Delete</TooltipContent>
-                            </Tooltip>
-                        </TooltipProvider>
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8 text-muted-foreground"
+                        >
+                            <Share2 className="h-4 w-4" />
+                            <span className="sr-only">Share</span>
+                        </Button>
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8 text-muted-foreground"
+                            onClick={() => handleDelete(note?._id)}
+
+                        >
+                            <Trash2 className="h-4 w-4" />
+                            <span className="sr-only">Delete</span>
+                        </Button>
                     </div>
                 </div>
             </CardFooter>

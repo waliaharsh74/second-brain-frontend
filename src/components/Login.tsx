@@ -55,11 +55,20 @@ export default function LoginForm() {
             })
             navigate('/')
         } catch (error) {
-            toast({
-                title: "Uh oh! Something went wrong.",
-                description: "check console for error",
-            })
-            console.log(error);
+            if (axios.isAxiosError(error)) {
+                toast({
+                    title: error?.message || "Uh oh! Something went wrong.",
+                    description: error?.response?.data?.message || `please try again after sometime`,
+                })
+                console.log(error);
+            } else {
+                toast({
+                    title: "Uh oh! Something went wrong.",
+                    description: `please try again after sometime`,
+                })
+                console.log(error);
+            }
+
         }
     }
     return (
@@ -86,9 +95,6 @@ export default function LoginForm() {
                     <div className="grid gap-2">
                         <div className="flex items-center">
                             <Label htmlFor="password">Password</Label>
-                            {/* <a href="#" className="ml-auto inline-block text-sm underline">
-                                Forgot your password?
-                            </a> */}
                         </div>
                         <Input id="password" value={password}
                             onChange={(e) => setPassword(e.target.value)} type="password" required />

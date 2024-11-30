@@ -12,7 +12,7 @@ import { Label } from "@/components/ui/label"
 import { toast } from "@/hooks/use-toast"
 import axios from "axios"
 import { useState } from "react"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 
 export const description =
     "A login form with email and password. There's an option to login with Google and a link to sign up if you don't have an account."
@@ -25,6 +25,7 @@ export const containerClassName =
 export default function SignUpForm() {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const navigate = useNavigate()
 
     const handleSubmit = async () => {
 
@@ -48,16 +49,26 @@ export default function SignUpForm() {
             }
 
             const response = await axios.post('http://localhost:3000/api/v1/signup', { email, password })
+            console.log(response?.data);
             toast({
                 title: "Signup Success!",
                 description: "you can now login to use app"
             })
+            navigate('/login')
         } catch (error) {
-            toast({
-                title: "Uh oh! Something went wrong.",
-                description: "check console for error",
-            })
-            console.log(error);
+            if (axios.isAxiosError(error)) {
+                toast({
+                    title: error?.message || "Uh oh! Something went wrong.",
+                    description: error?.response?.data?.message || `please try again after sometime`,
+                })
+                console.log(error);
+            } else {
+                toast({
+                    title: "Uh oh! Something went wrong.",
+                    description: `please try again after sometime`,
+                })
+                console.log(error);
+            }
         }
     }
     return (
