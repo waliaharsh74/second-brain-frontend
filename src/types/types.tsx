@@ -1,7 +1,7 @@
 import { ReactElement } from "react"
 
 export type Note = {
-    id: string
+    _id: string
     title: string
     content: string
     type: "tweet" | "video" | "document" | "text"
