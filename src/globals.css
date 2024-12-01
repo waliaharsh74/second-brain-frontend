@@ -25,5 +25,11 @@
 }
 
 :global(.react-tweet-theme .tweet-username) {
-  font-weight: bold;
+  width: 90%;
+  min-width: 0px!important;
 }
+:global(._root_98iqw_1 ) {
+ 
+  min-width: 0px!important;
+}
+

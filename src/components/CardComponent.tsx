@@ -62,17 +62,17 @@ const CardComponent: React.FC<CardProps> = ({ note, fetchData }) => {
                 {getIcon(note?.type)}
                 <CardTitle className="text-base">{note.title}</CardTitle>
             </CardHeader>
-            {note.content && note.type != 'video' && (
-                <CardContent>
-                    <p className="whitespace-pre-wrap text-sm text-muted-foreground">
-                        {note.content}
-                    </p>
-                </CardContent>
-            )}
-            {note?.type?.toLowerCase() === 'video' && (
-                <CardContent>
-                    <iframe
 
+            {note?.content && <CardContent>
+                <p className="whitespace-pre-wrap text-sm text-muted-foreground">
+                    {note?.content}
+                </p>
+            </CardContent>}
+
+            {note?.type?.toLowerCase() === 'video' && (
+                <CardContent >
+                    <iframe
+                        className='w-full h-auto'
                         src={`https://www.youtube.com/embed/${extractYouTubeId(note.link || "")}`}
                         frameBorder="0"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -81,8 +81,11 @@ const CardComponent: React.FC<CardProps> = ({ note, fetchData }) => {
                 </CardContent>
             )}
             {note.type === 'tweet' && (
-                <CardContent className=''>
-                    <Tweet apiUrl='' id={extractTweetId(note.link || '')} />
+                <CardContent >
+                    <div className="tweets">
+
+                        <Tweet apiUrl='' id={extractTweetId(note.link || '')} />
+                    </div>
                     {/* <a href={note.link} className='block w-full break-words'>{note.link}</a> */}
                 </CardContent>
             )}
