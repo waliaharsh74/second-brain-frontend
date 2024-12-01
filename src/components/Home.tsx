@@ -56,6 +56,8 @@ export default function Home() {
     const [selectedFrameworks, setSelectedFrameworks] = React.useState<string[]>(["Productivity", "Ideas"]);
     const [title, setTitle] = React.useState("");
     const [link, setLink] = React.useState("");
+    const [content, setContent] = React.useState("");
+    const [open, setOpen] = React.useState(false);
     const { value: typeValue, Component: TypeComponent } = useDropDown(TypeFramework)
     const toggleSidebar = () => setSidebarOpen(!isSidebarOpen)
     const { toast } = useToast()
@@ -69,14 +71,26 @@ export default function Home() {
                 title: "Uh oh! Something went wrong.",
                 description: "Please Select all required feilds",
             })
+            return
         }
         try {
             const token = localStorage.getItem("secondBrainToken");
             const headers = {
                 authorization: `Bearer ${token}`
             }
-            const response = await axios.post('http://localhost:3000/api/v1/content', { link: link, type: typeValue, title, tags: selectedFrameworks }, { headers })
+            const response = await axios.post('http://localhost:3000/api/v1/content', { link: link, type: typeValue, title, tags: selectedFrameworks, content }, { headers })
             console.log(response);
+            toast({
+                title: "Success!",
+                description: "Content added Succesfully",
+            })
+            setOpen(false)
+            // setSelectedFrameworks([]);
+            setTitle('')
+            setLink('')
+            setContent('')
+            FetchData()
+
         } catch (error) {
             toast({
                 title: "Uh oh! Something went wrong.",
@@ -85,25 +99,32 @@ export default function Home() {
             console.log(error);
         }
     }
-    React.useEffect(() => {
-        const FetchData = async () => {
-            try {
-                const token = localStorage.getItem("secondBrainToken");
-                const headers = {
-                    authorization: `Bearer ${token}`
-                }
-                const { data } = await axios.get('http://localhost:3000/api/v1/content', { headers })
-                setNotes(data?.content);
-                console.log("notes", data);
-            } catch (error) {
-                toast({
-                    title: "Uh oh! Something went wrong.",
-                    description: "check console for error",
-                })
-                console.log(error);
+    const FetchData = async (type?: string) => {
+        try {
+            const token = localStorage.getItem("secondBrainToken");
+            const headers = {
+                authorization: `Bearer ${token}`
             }
-
+            let url = `http://localhost:3000/api/v1/content`
+            if (type) {
+                url = `${url}?type=${type}`
+            }
+            const { data } = await axios.get(url, { headers })
+            setNotes(data?.content);
+            console.log("notes", data);
+        } catch (error) {
+            toast({
+                title: "Uh oh! Something went wrong.",
+                description: "check console for error",
+            })
+            console.log(error);
         }
+
+    }
+    const handleTypeFetch = () => {
+
+    }
+    React.useEffect(() => {
         FetchData()
 
     }, [])
@@ -129,16 +150,17 @@ export default function Home() {
                 </div>
                 <nav className="space-y-1 p-4">
                     {[
-                        { icon: Twitter, label: "Tweets" },
-                        { icon: Youtube, label: "Videos" },
-                        { icon: FileText, label: "Documents" },
-                        { icon: Link2, label: "Links" },
-                        { icon: Hash, label: "Tags" },
+                        { icon: Twitter, label: "Tweets", value: "tweet" },
+                        { icon: Youtube, label: "Videos", value: "video" },
+                        { icon: FileText, label: "Documents", value: "document" },
+                        { icon: Link2, label: "All", value: undefined },
+                        // { icon: Hash, label: "Tags",value:"tags" },
                     ].map((item) => (
                         <Button
                             key={item.label}
                             variant="ghost"
-                            className="w-full justify-start gap-2"
+                            className="w-full justify-start gap-2 hover:bg-slate-200"
+                            onClick={() => FetchData(item.value)}
                         >
                             <item.icon className="h-5 w-5" />
                             {item.label}
@@ -184,12 +206,12 @@ export default function Home() {
                                     Share Brain
                                 </Button>
                                 <p className="text-center text-sm text-muted-foreground">
-                                    {notes.length} items will be shared
+                                    {notes?.length} items will be shared
                                 </p>
                             </div>
                         </DialogContent>
                     </Dialog>
-                    <Dialog>
+                    <Dialog open={open} onOpenChange={setOpen}>
                         <DialogTrigger asChild>
                             <Button className="gap-2">
                                 <FileText className="h-5 w-5" />
@@ -254,7 +276,7 @@ export default function Home() {
 
                                         </div>
 
-                                        <Textarea />
+                                        <Textarea value={content} onChange={(e) => setContent(e.target.value)} />
                                     </div>
 
 
@@ -272,7 +294,7 @@ export default function Home() {
 
                 <main className="grid gap-4 p-4 md:grid-cols-2 lg:grid-cols-3">
                     {notes.map((note) => (
-                        <CardComponent key={note?._id} note={note} />
+                        <CardComponent key={note?._id} note={note} fetchData={FetchData} />
                     ))}
                 </main>
             </div>

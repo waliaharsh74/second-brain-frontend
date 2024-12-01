@@ -16,6 +16,7 @@ export type NavbarProps = {
 export type CardProps = {
     // toggleSidebar: () => void;
     note: Note;
+    fetchData: () => void
 };
 export type FrameworkProps = {
     value: string,

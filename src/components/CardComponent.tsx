@@ -6,25 +6,16 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import {
-    Tooltip,
-    TooltipContent,
-    TooltipTrigger,
-    TooltipProvider
-} from "@/components/ui/tooltip"
 import { CardProps } from '../types/types'
 import { Button } from './ui/button'
-import { Copy, Share2, Trash2 } from 'lucide-react'
+import { Share2, Trash2 } from 'lucide-react'
 import { getIcon } from '@/utils/getIcon'
-import { Tweet } from 'react-tweet'
 import '../globals.css'
-import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-} from "@/components/ui/popover"
+import axios from 'axios'
+import { toast } from '@/hooks/use-toast'
+import { Tweet } from 'react-tweet'
+
+
 
 
 
@@ -34,18 +25,39 @@ const extractYouTubeId = (url: string) => {
     return match ? match[1] : null;
 }
 
-const extractTweetId = (url: string): string | null => {
+const extractTweetId = (url: string): string | undefined => {
     const regex = /(?:https?:\/\/)?(?:www\.)?x\.com\/(?:[^\/]+\/)?status(?:es)?\/(\d+)/;
     const match = url.match(regex);
-    return match ? match[1] : null;
+    return match ? match[1] : undefined;
 };
 
-const CardComponent: React.FC<CardProps> = ({ note }) => {
-    const handleDelete = (id: string) => {
-        console.log("id", id);
+const CardComponent: React.FC<CardProps> = ({ note, fetchData }) => {
+    const handleDelete = async (contentId: string) => {
+
+        try {
+            const token = localStorage.getItem("secondBrainToken");
+            const headers = {
+                authorization: `Bearer ${token}`
+            }
+            const response = await axios.delete('http://localhost:3000/api/v1/content', { data: { contentId }, headers })
+            console.log(response);
+            toast({
+                title: "Success!",
+                description: "Content Deleted Succesfully",
+            })
+            fetchData()
+
+
+        } catch (error) {
+            toast({
+                title: "Uh oh! Something went wrong.",
+                description: "check console for error",
+            })
+            console.log(error);
+        }
     }
     return (
-        <Card key={note._id}>
+        <Card key={note._id} className='h-auto'>
             <CardHeader className="flex flex-row items-center gap-2">
                 {getIcon(note?.type)}
                 <CardTitle className="text-base">{note.title}</CardTitle>
@@ -70,7 +82,8 @@ const CardComponent: React.FC<CardProps> = ({ note }) => {
             )}
             {note.type === 'tweet' && (
                 <CardContent className=''>
-                    <a href={note.link} className='block w-full break-words'>{note.link}</a>
+                    <Tweet apiUrl='' id={extractTweetId(note.link || '')} />
+                    {/* <a href={note.link} className='block w-full break-words'>{note.link}</a> */}
                 </CardContent>
             )}
             <CardFooter className="flex flex-col items-stretch gap-2">
@@ -87,7 +100,7 @@ const CardComponent: React.FC<CardProps> = ({ note }) => {
                 </div>
                 <div className="flex items-center justify-between">
 
-                    <div className="flex gap-0.5">
+                    <div className="flex gap-0.5 justify-end">
                         <Button
                             variant="ghost"
                             size="icon"
